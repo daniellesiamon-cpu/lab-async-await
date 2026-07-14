@@ -1,46 +1,41 @@
-// 1. Define the API endpoint to get the posts
 const API_URL = 'https://jsonplaceholder.typicode.com/posts';
 
-// 2. Main function to fetch and display the random posts
 async function displayRandomPosts() {
   try {
-    // Fetch the raw data from the API
     const response = await fetch(API_URL);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     
-    // Convert the API response to JSON
     const posts = await response.json();
 
-    // Shuffle the posts randomly and grab the first 5
+    // Shuffle and grab the first 5 posts
     const randomPosts = posts.sort(() => 0.5 - Math.random()).slice(0, 5);
 
-    // Get your exact 'post-list' element from index.html
     const postList = document.getElementById('post-list');
-    
-    if (!postList) {
-      console.error("Could not find the <ul id='post-list'> element in your HTML.");
-      return;
-    }
+    if (!postList) return;
 
-    // Clear any loading text or placeholder items inside the <ul>
+    // Clear the list
     postList.innerHTML = '';
 
-    // Loop through our selected random posts and create list items
+    // Loop through and explicitly create h1 and p elements as required by the test
     randomPosts.forEach(post => {
       const listItem = document.createElement('li');
       
-      // We wrap the post content cleanly inside the list item <li>
-      listItem.innerHTML = `
-        <div class="post-card">
-          <h3>${post.title}</h3>
-          <p>${post.body}</p>
-        </div>
-      `;
+      // Create the h1 element (the test specifically looks for this)
+      const h1 = document.createElement('h1');
+      h1.textContent = post.title;
+
+      // Create the p element (the test also looks for this)
+      const p = document.createElement('p');
+      p.textContent = post.body;
+
+      // Append them both to the list item
+      listItem.appendChild(h1);
+      listItem.appendChild(p);
       
-      // Append the new <li> to our <ul> list
+      // Append the list item to the main list
       postList.appendChild(listItem);
     });
 
@@ -49,5 +44,4 @@ async function displayRandomPosts() {
   }
 }
 
-// 3. Run the function as soon as the DOM is ready
-window.addEventListener('DOMContentLoaded', displayRandomPosts);// Write your code here!
+window.addEventListener('DOMContentLoaded', displayRandomPosts);
